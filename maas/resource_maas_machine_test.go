@@ -11,7 +11,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func testAccMaasMachine(domain string, hostname string, power_parameters string, power_type string, pxe_mac_address string, zone string) string {
+func testAccMAASMachine(domain string, hostname string, power_parameters string, power_type string, pxe_mac_address string, zone string) string {
 	return fmt.Sprintf(`
 resource "maas_dns_domain" "test" {
 	name          = "%s"
@@ -30,7 +30,7 @@ resource "maas_machine" "test" {
 `, domain, hostname, power_parameters, power_type, pxe_mac_address, zone)
 }
 
-func testAccMaasMachineCheckExists(rn string, machine *entity.Machine) resource.TestCheckFunc {
+func testAccMAASMachineCheckExists(rn string, machine *entity.Machine) resource.TestCheckFunc {
 	return func(s *terraform.State) error {
 		rs, ok := s.RootModule().Resources[rn]
 		if !ok {
@@ -53,7 +53,7 @@ func testAccMaasMachineCheckExists(rn string, machine *entity.Machine) resource.
 	}
 }
 
-func testAccCheckMaasMachineDestroy(s *terraform.State) error {
+func testAccCheckMAASMachineDestroy(s *terraform.State) error {
 	// retrieve the connection established in Provider configuration
 	conn := testutils.TestAccProvider.Meta().(*maas.ClientConfig).Client
 
