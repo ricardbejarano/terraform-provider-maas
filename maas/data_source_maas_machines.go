@@ -19,45 +19,15 @@ func dataSourceMAASMachines() *schema.Resource {
 				Description: "A set of machines visible to the user.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"architecture": {
+						"system_id": {
 							Type:        schema.TypeString,
 							Computed:    true,
-							Description: "The architecture type of the machine.",
-						},
-						"domain": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The domain of the machine.",
+							Description: "The system ID of the machine.",
 						},
 						"hostname": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "The machine hostname.",
-						},
-						"min_hwe_kernel": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The minimum kernel version allowed to run on this machine.",
-						},
-						"pool": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The resource pool of the machine.",
-						},
-						"power_type": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The power management type (e.g. `ipmi`) of the machine.",
-						},
-						"pxe_mac_address": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The MAC address of the machine's PXE boot NIC.",
-						},
-						"zone": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The zone of the machine.",
 						},
 					},
 				},
@@ -77,14 +47,8 @@ func dataSourceMachinesRead(ctx context.Context, d *schema.ResourceData, meta in
 	items := []map[string]interface{}{}
 	for _, machine := range machines {
 		items = append(items, map[string]interface{}{
-			"architecture":    machine.Architecture,
-			"domain":          machine.Domain.Name,
-			"hostname":        machine.Hostname,
-			"min_hwe_kernel":  machine.MinHWEKernel,
-			"pool":            machine.Pool.Name,
-			"power_type":      machine.PowerType,
-			"pxe_mac_address": machine.BootInterface.MACAddress,
-			"zone":            machine.Zone.Name,
+			"system_id": machine.SystemID,
+			"hostname":  machine.Hostname,
 		})
 	}
 
