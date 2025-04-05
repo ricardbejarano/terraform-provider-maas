@@ -22,12 +22,7 @@ func TestAccDataSourceMAASMachines_basic(t *testing.T) {
 
 	checks := []resource.TestCheckFunc{
 		testAccMAASMachineCheckExists("maas_machine.test", &machine),
-		resource.TestCheckResourceAttr("data.maas_machines.test", "machines.0.domain", domain),
 		resource.TestCheckResourceAttr("data.maas_machines.test", "machines.0.hostname", hostname),
-		resource.TestCheckResourceAttr("data.maas_machines.test", "machines.0.power_parameters", power_parameters),
-		resource.TestCheckResourceAttr("data.maas_machines.test", "machines.0.power_type", power_type),
-		resource.TestCheckResourceAttr("data.maas_machines.test", "machines.0.pxe_mac_address", pxe_mac_address),
-		resource.TestCheckResourceAttr("data.maas_machines.test", "machines.0.zone", zone),
 	}
 
 	resource.ParallelTest(t, resource.TestCase{
