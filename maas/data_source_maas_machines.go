@@ -55,7 +55,7 @@ func dataSourceMachinesRead(ctx context.Context, d *schema.ResourceData, meta in
 	if err := d.Set("machines", items); err != nil {
 		return diag.FromErr(err)
 	}
-	d.SetId(machines[0].SystemID)
+	d.SetId("maas_machines")
 
 	return nil
 }
