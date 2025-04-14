@@ -21,6 +21,10 @@ func TestAccDataSourceMAASMachines_basic(t *testing.T) {
 				return err
 			}
 
+			// We're about to compare the `machines` we just got, with the `machines` data source attribute.
+			// There's a slim chance that the upstream MAAS API list of machines changed in between both times we read.
+			// If any of the following tests fail for no apparent reason, that might explain why: a change might've gone through in between them.
+			// Try re-running the tests if you suspect that's what's happening.
 			if err := resource.TestCheckResourceAttr("data.maas_machines.test", "machines.#", strconv.Itoa(len(machines)))(s); err != nil {
 				return err
 			}
