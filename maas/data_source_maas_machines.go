@@ -19,15 +19,15 @@ func dataSourceMAASMachines() *schema.Resource {
 				Description: "A set of machines visible to the user.",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"system_id": {
-							Type:        schema.TypeString,
-							Computed:    true,
-							Description: "The system ID of the machine.",
-						},
 						"hostname": {
 							Type:        schema.TypeString,
 							Computed:    true,
 							Description: "The machine hostname.",
+						},
+						"system_id": {
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "The system ID of the machine.",
 						},
 					},
 				},
