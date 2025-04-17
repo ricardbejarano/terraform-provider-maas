@@ -66,6 +66,7 @@ func Provider() *schema.Provider {
 			"maas_network_interface_link":     resourceMAASNetworkInterfaceLink(),
 			"maas_fabric":                     resourceMAASFabric(),
 			"maas_vlan":                       resourceMAASVLAN(),
+			"maas_vlan_dhcp":                  resourceMAASVLANDHCP(),
 			"maas_subnet":                     resourceMAASSubnet(),
 			"maas_subnet_ip_range":            resourceMAASSubnetIPRange(),
 			"maas_dns_domain":                 resourceMAASDNSDomain(),
@@ -77,6 +78,7 @@ func Provider() *schema.Provider {
 			"maas_network_interface_tag":      resourceMAASNetworkInterfaceTag(),
 			"maas_user":                       resourceMAASUser(),
 			"maas_resource_pool":              resourceMAASResourcePool(),
+			"maas_volume_group":               resourceMAASVolumeGroup(),
 			"maas_zone":                       resourceMAASZone(),
 		},
 		DataSourcesMap: map[string]*schema.Resource{
@@ -86,6 +88,7 @@ func Provider() *schema.Provider {
 			"maas_vlan":                       dataSourceMAASVLAN(),
 			"maas_subnet":                     dataSourceMAASSubnet(),
 			"maas_machine":                    dataSourceMAASMachine(),
+			"maas_machines":                   dataSourceMAASMachines(),
 			"maas_network_interface_physical": dataSourceMAASNetworkInterfacePhysical(),
 			"maas_device":                     dataSourceMAASDevice(),
 			"maas_devices":                    dataSourceMAASDevices(),
