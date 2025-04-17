@@ -2,57 +2,53 @@ package maas_test
 
 import (
 	"fmt"
+	"strconv"
 	"terraform-provider-maas/maas/testutils"
 	"testing"
 
-	"github.com/canonical/gomaasclient/entity"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/resource"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
 func TestAccDataSourceMAASDevices_basic(t *testing.T) {
-
-	var device entity.Device
-	description := "Test description"
-	domain := acctest.RandomWithPrefix("tf-domain-")
-	hostname := acctest.RandomWithPrefix("tf-device-")
-	zone := "default"
-	mac_address := testutils.RandomMAC()
-
 	checks := []resource.TestCheckFunc{
-		testAccMAASDeviceCheckExists("maas_device.test", &device),
-		resource.TestCheckResourceAttr("data.maas_devices.test", "devices.0.description", description),
-		resource.TestCheckResourceAttr("data.maas_devices.test", "devices.0.domain", domain),
-		resource.TestCheckResourceAttr("data.maas_devices.test", "devices.0.fqdn", fmt.Sprintf("%s.%s", hostname, domain)),
-		resource.TestCheckResourceAttr("data.maas_devices.test", "devices.0.hostname", hostname),
-		resource.TestCheckResourceAttr("data.maas_devices.test", "devices.0.zone", zone),
-		resource.TestCheckResourceAttr("data.maas_devices.test", "devices.0.ip_addresses.#", "0"),
-		resource.TestCheckResourceAttr("data.maas_devices.test", "devices.0.network_interfaces.#", "1"),
-		resource.TestCheckResourceAttrSet("data.maas_devices.test", "devices.0.network_interfaces.0.id"),
-		resource.TestCheckResourceAttr("data.maas_devices.test", "devices.0.network_interfaces.0.mac_address", mac_address),
-		resource.TestCheckResourceAttr("data.maas_devices.test", "devices.0.network_interfaces.0.name", "eth0"),
-		resource.TestCheckResourceAttrSet("data.maas_devices.test", "devices.0.owner"),
+		func(s *terraform.State) error {
+			rs, ok := s.RootModule().Resources["data.maas_devices.test"]
+			if !ok {
+				return fmt.Errorf("data source not found: data.maas_devices.test")
+			}
+
+			n, err := strconv.Atoi(rs.Primary.Attributes["devices.#"])
+			if err != nil {
+				return err
+			}
+
+			for i := 0; i < n; i++ {
+				if err := resource.TestCheckResourceAttrSet("data.maas_devices.test", fmt.Sprintf("devices.%v.system_id", i))(s); err != nil {
+					return err
+				}
+				if err := resource.TestCheckResourceAttrSet("data.maas_devices.test", fmt.Sprintf("devices.%v.hostname", i))(s); err != nil {
+					return err
+				}
+			}
+
+			return nil
+		},
 	}
 
 	resource.ParallelTest(t, resource.TestCase{
-		PreCheck:     func() { testutils.PreCheck(t, nil) },
-		Providers:    testutils.TestAccProviders,
-		CheckDestroy: testAccCheckMAASDeviceDestroy,
-		ErrorCheck:   func(err error) error { return err },
+		PreCheck:   func() { testutils.PreCheck(t, nil) },
+		Providers:  testutils.TestAccProviders,
+		ErrorCheck: func(err error) error { return err },
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceMAASDevices(description, domain, hostname, zone, mac_address),
+				Config: testAccDataSourceMAASDevices(),
 				Check:  resource.ComposeTestCheckFunc(checks...),
 			},
 		},
 	})
 }
 
-func testAccDataSourceMAASDevices(description string, domain string, hostname string, zone string, mac_address string) string {
-	return fmt.Sprintf(`
-%s
-
-data "maas_devices" "test" {
-}
-`, testAccMAASDevice(description, domain, hostname, zone, mac_address))
+func testAccDataSourceMAASDevices() string {
+	return `data "maas_devices" "test" {}`
 }

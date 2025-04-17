@@ -13,16 +13,6 @@ Lists MAAS devices visible to the user.
 ## Example Usage
 
 ```terraform
-resource "maas_device" "test_device" {
-  description = "Test description"
-  domain      = "maas"
-  hostname    = "test-device"
-  zone        = "default"
-  network_interfaces {
-    mac_address = "12:23:45:67:89:de"
-  }
-}
-
 data "maas_devices" "all" {}
 ```
 
@@ -39,20 +29,5 @@ data "maas_devices" "all" {}
 
 Read-Only:
 
-- `description` (String)
-- `domain` (String)
-- `fqdn` (String)
 - `hostname` (String)
-- `ip_addresses` (Set of String)
-- `network_interfaces` (Set of Object) (see [below for nested schema](#nestedobjatt--devices--network_interfaces))
-- `owner` (String)
-- `zone` (String)
-
-<a id="nestedobjatt--devices--network_interfaces"></a>
-### Nested Schema for `devices.network_interfaces`
-
-Read-Only:
-
-- `id` (Number)
-- `mac_address` (String)
-- `name` (String)
+- `system_id` (String)
